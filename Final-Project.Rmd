@@ -1,0 +1,120 @@
+---
+title: "Final Project"
+author: "Rezoan Ishteaque Hossain"
+date: "2026-05-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Abstract
+
+This project examines whether chocolate candies have a higher average win percent than non-chocolate candies using the FiveThirtyEight candy data set. The response variable is `winpercent`, and the main explanatory variable is `chocolate`. Summary statistics and visualizations showed that chocolate candies generally had higher win percent values. A one-sided two-sample t-test was used to compare the mean win percent of chocolate and non-chocolate candies. The results showed strong statistical evidence that chocolate candies have a higher average win percent than non-chocolate candies, with a p-value of 2.082e-10. Overall, the analysis suggests that chocolate candies tend to perform better than non-chocolate candies in this data set. One limitation is that this is an observational study, so it shows association, not causation.
+
+
+# Introduction
+
+
+This project looks at whether chocolate candies have a higher average win percent than non-chocolate candies. The main research question is: Do chocolate candies have a higher average win percent than non-chocolate candies?
+
+This question is important because it helps show whether chocolate is associated with better overall candy ratings in this data set. Since the data was already collected and I am not doing an experiment, this is an observational study.
+
+For this project, I will use a two-sample t-test to compare the mean win percent of chocolate and non-chocolate candies.
+
+
+
+# Overview of the Data
+
+The data for this project comes from the FiveThirtyEight candy data set. The cases are individual candies, and there are 85 candy types in the data set.
+
+The response variable is `winpercent`, which is numerical. This variable shows the win percent for each candy. The main explanatory variable is `chocolate`, which is categorical because it shows whether a candy has chocolate or not. I will also include `fruity` as a second explanatory variable in the overview because the project instructions say to include at least two variables.
+
+The data was collected from a public source, so the analysis can be reproduced.
+
+```{r load-data}
+candy <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv")
+head(candy)
+```
+
+
+
+# Summary Statistics
+
+This section gives summary statistics for chocolate and non-chocolate candies. I compare the sample size, mean, median, standard deviation, minimum, and maximum of `winpercent` for the two groups.
+
+
+```{r summary-stats}
+choc <- subset(candy, chocolate == 1)$winpercent
+nonchoc <- subset(candy, chocolate == 0)$winpercent
+
+summary_table <- data.frame(
+  Group = c("Non-chocolate", "Chocolate"),
+  n = c(length(nonchoc), length(choc)),
+  Mean = c(mean(nonchoc), mean(choc)),
+  Median = c(median(nonchoc), median(choc)),
+  SD = c(sd(nonchoc), sd(choc)),
+  Min = c(min(nonchoc), min(choc)),
+  Max = c(max(nonchoc), max(choc))
+)
+
+knitr::kable(summary_table, digits = 2)
+```
+
+The summary statistics show that chocolate candies have a higher average win percent than non-chocolate candies. The mean win percent is about 60.92 for chocolate candies and about 42.14 for non-chocolate candies. The median win percent is also higher for chocolate candies, which shows that chocolate candies tend to perform better in this data set.
+
+
+
+# Data Visualizations
+
+This section includes visualizations of `winpercent` for the candy data. I use a boxplot to compare chocolate and non-chocolate candies, and I use a histogram to show the overall distribution of `winpercent`.
+
+```{r boxplot}
+boxplot(winpercent ~ chocolate,
+        data = candy,
+        main = "Win Percent by Chocolate Status",
+        xlab = "Chocolate (0 = No, 1 = Yes)",
+        ylab = "Win Percent")
+```
+
+The boxplot shows that chocolate candies generally have higher win percent values than non-chocolate candies. The center of the chocolate group is clearly higher than the center of the non-chocolate group.
+
+```{r histogram}
+hist(candy$winpercent,
+     main = "Distribution of Win Percent",
+     xlab = "Win Percent",
+     ylab = "Frequency")
+```
+
+The histogram shows the overall distribution of win percent across all candies. Most candies are grouped in the middle range, with fewer candies at the very low and very high ends.
+
+
+# Statistical Output
+
+This section includes the statistical output for the two-sample t-test. I use this test to compare the mean `winpercent` of chocolate candies and non-chocolate candies.
+
+The null hypothesis is that the mean win percent of chocolate candies is equal to the mean win percent of non-chocolate candies.
+
+The alternative hypothesis is that the mean win percent of chocolate candies is greater than the mean win percent of non-chocolate candies.
+
+```{r t-test}
+t_test_result <- t.test(choc, nonchoc, alternative = "greater")
+t_test_result
+```
+
+I used a one-sided two-sample t-test because my research question asks whether chocolate candies have a higher average win percent than non-chocolate candies.
+
+The t-test results show a t-statistic of about 7.30 and a p-value of 2.082e-10. Since the p-value is much smaller than 0.05, I reject the null hypothesis. There is very strong statistical evidence that chocolate candies have a higher mean win percent than non-chocolate candies. The sample means also support this result, because the average win percent is about 60.92 for chocolate candies and about 42.14 for non-chocolate candies.
+
+# Conclusion
+
+The goal of this project was to determine whether chocolate candies have a higher average win percent than non-chocolate candies. Based on the summary statistics, data visualizations, and the one-sided two-sample t-test, the results show that chocolate candies do have a higher average win percent in this data set.
+
+This analysis is important because it helps show how one candy characteristic, chocolate, is related to overall candy ratings. In this data set, chocolate candies appear to be more popular on average than non-chocolate candies.
+
+One limitation of this analysis is that the data set only includes 85 candies, so it may not represent every candy that exists. Another limitation is that this is an observational study, so I can describe an association, but I cannot prove that chocolate directly causes a higher win percent.
+
+Overall, the results of this project support the idea that chocolate candies tend to perform better than non-chocolate candies in terms of win percent.
+
+
